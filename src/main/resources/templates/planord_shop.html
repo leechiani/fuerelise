@@ -262,7 +262,6 @@
             city_selector();
 
             //開始日最快3天後
-            
             var today = new Date();
             var defaultStartDate = new Date(today.setDate(today.getDate() + 3)).toLocaleDateString('fr-ca');
             var defaultEndDate = new Date(today.setDate(today.getDate() + 27)).toLocaleDateString('fr-ca');
@@ -285,23 +284,24 @@
                 }
             }
 
-            // 起始日期的 change 事件處理器
+         	// 起始日期更改結束日
             $('#start').change(function () {
                 updateEndDate();
             });
 
-            // 期數的 change 事件處理器
+         	// 期數更改結束日
             $('#period').change(function () {
                 updateEndDate();
             });
 
-         	// Initial calculation
-            $('#total').val(300);
-            // Change event handlers
-            $('[name="planName"], #period, #times').click(function () {
-                calculateTotal();
+         	// 計算總額
+            $("select[name='planName']").change(function(){
+            	total_selector();
             });
-
+            $("select#period").change(function(){
+            	total_selector();
+            });
+         	
         });
 
         // 每週選收幾次，每次更改checkbox要重選  
@@ -312,10 +312,10 @@
 
         $(document).on("change", "select#times", function () {
             a = $(".sl_option:selected").val();
+            total_selector();
             $('#sl_input .checkbox-input').prop('checked', false); //先把所有check拿掉
             $('#sl_input .checkbox-input').prop('disabled', false); //把所有disable拿掉
             $('#sl_input #default').prop('checked', true); //default加上check
-            // console.log($("#sl_input .checkbox-input:checked").length); //選了幾項
             if ($("#sl_input .checkbox-input:checked").length >= a) {
                 $('#sl_input #unchecked').prop('disabled', true); //其他disable 
             }
@@ -340,14 +340,6 @@
 
         });
         
-     	// 抓小計
-        function calculateTotal() {
-            var planNamePrice = $("select[name='planName'] option:selected").data('price');
-            var periodLength = $("select#period option:selected").data('month');
-            var timesPerWeek = a;
-            var totalPrice = planNamePrice * periodLength * timesPerWeek;
-            $('#total').val(totalPrice);
-        }
     </script>
 </body>
 

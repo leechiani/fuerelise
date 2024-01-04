@@ -29,6 +29,7 @@ public class MemEstabCaseVO {
     private String cityName;
     private String cityCode;
     private String floor;
+    private String pickupStop;
     private String contact;
     private String contactTel;
 
@@ -48,7 +49,7 @@ public class MemEstabCaseVO {
 
     public  MemEstabCaseVO(){}
 
-    public MemEstabCaseVO(Integer planOrdID, String planName, String timeRange, Integer planPeriod, String day, String dayCode, String wayName, Integer memID, String memName, Date planStart, Date planEnd, BigDecimal total, String cityName, String cityCode, String floor, String contact, String contactTel, List<MemEstabCaseBO> memEstabCaseBO) {
+    public MemEstabCaseVO(Integer planOrdID, String planName, String timeRange, Integer planPeriod, String day, String dayCode, String wayName, Integer memID, String memName, Date planStart, Date planEnd, BigDecimal total, String cityName, String cityCode, String floor, String pickupStop, String contact, String contactTel, List<MemEstabCaseBO> memEstabCaseBO) {
         this.planOrdID = planOrdID;
         this.planName = planName;
         this.timeRange = timeRange;
@@ -64,6 +65,7 @@ public class MemEstabCaseVO {
         this.cityName = cityName;
         this.cityCode = cityCode;
         this.floor = floor;
+        this.pickupStop = pickupStop;
         this.contact = contact;
         this.contactTel = contactTel;
         this.memEstabCaseBO = memEstabCaseBO;

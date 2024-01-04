@@ -61,7 +61,7 @@ public class SaleService {
 		List<Sale> saleList = dao.findActiveSalesWithCoupon(coupon);
 		System.out.println(saleList);
 		if (saleList.isEmpty())
-			result = "折扣碼不存在";
+			result = "優惠碼不存在";
 		// if total >= disRequire
 		else if (new BigDecimal(total).compareTo(saleList.get(0).getDisRequire()) < 0) {
 			result = "未達折扣門檻";

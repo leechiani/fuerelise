@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PlanOrdService {
@@ -60,36 +61,21 @@ public class PlanOrdService {
 				req.getPlanStart(), req.getPlanEnd(), req.getCityCode(), req.getFloor(), req.getPickupStop(),
 				new BigDecimal(req.getAfterTotal()), 0, 210001, req.getContact(), req.getContactTel());
 
-		PlanOrd createPlanOrd =dao.save(planOrd);
+		PlanOrd createPlanOrd = dao.save(planOrd);
 
 		System.out.println(planOrd);
-		//猜單
+		// 拆單
 		Plan plan = planDao.findById(createPlanOrd.getPlanID()).orElseThrow();
 		Period period = periodDao.findById(createPlanOrd.getPeriodID()).orElseThrow();
-		splitPlanOrdService.addEstabCases(
-				createPlanOrd.getPlanOrdID(),
-                String.valueOf(createPlanOrd.getPlanStart()),
-				period.getPlanPeriod(),
-				createPlanOrd.getDay(),
-				plan.getPlanPricePerCase()
-		);
+		splitPlanOrdService.addEstabCases(createPlanOrd.getPlanOrdID(), String.valueOf(createPlanOrd.getPlanStart()),
+				period.getPlanPeriod(), createPlanOrd.getDay(), plan.getPlanPricePerCase());
 
 		return createPlanOrd;
 	}
 
 	// 方案名+收取次數取得方案ID
 	private Integer getPlanId(String planName, String times) {
-
 		return planDao.findIdByPlanNameAndTimes(planName, Integer.valueOf(times));
-
-//			Integer planID = 0;
-//			List<Plan> planList = planDao.findAll();
-//			for (Plan p : planList) {
-//				if (p.getPlanName().equals(planName) && p.getTimes() == Integer.valueOf(times)) {
-//					planID = p.getPlanID();
-//				}
-//			}
-//			return planID;
 	}
 
 	// 取得收取日字串
@@ -141,14 +127,6 @@ public class PlanOrdService {
 			planStatus = getPlanStatus(p.getPlanStatusID());
 
 			PlanOrdDTO info = new PlanOrdDTO(planOrdId, memName, planName, planStart, planEnd, total, planStatus);
-//			info.setPlanOrdID(planOrdId);
-//			info.setMemName(memName);
-//			info.setPlanName(planName);
-//			info.setPlanStart(planStart);
-//			info.setPlanEnd(planEnd);
-//			info.setTotal(total);
-//			info.setPlanStatus(planStatus);
-
 			infoList.add(info);
 		}
 		return infoList;
@@ -186,24 +164,21 @@ public class PlanOrdService {
 
 // ↑↑↑↑↑for list name instead of ID, PlanOrdController↑↑↑↑
 
-	// 找當前使用者進行中的訂單是否有planEndDate晚於三天後的
+	// 找當前使用者是否有待收取舊訂單且新訂單開始日早於舊訂單結束日
 	public boolean verifyPlanOrdPurchase(Integer memID, String planStart) {
 		// find planOrd of a member
 		boolean proceed = false;
 		List<PlanOrd> planOrdList = dao.findByMemID(memID);
-		if (planOrdList.isEmpty()) {
+		if (planOrdList.isEmpty())
 			proceed = true;
-		} else {
-			for (PlanOrd p : planOrdList) {
-				// check if planOrd is valid or in progress
-				if (!p.getPlanStatusID().equals(210001) || 
-					Date.valueOf(planStart).compareTo(p.getPlanEnd()) > 0)
-					proceed = true;
-				else {
-					proceed = false;
-					break;
-				}
-			}
+		// check if planOrd is valid or in progress
+		else {
+			List<PlanOrd> newList = planOrdList.stream().filter(p -> 
+									p.getPlanStatusID().equals(210001) && 
+									Date.valueOf(planStart).compareTo(p.getPlanEnd()) <= 0)
+									.collect(Collectors.toList());
+			if (newList.isEmpty())
+				proceed = true;
 		}
 		return proceed;
 	}
@@ -262,8 +237,16 @@ public class PlanOrdService {
 		return cityDao.findAll();
 	}
 
+	public BigDecimal getPrice(PlanOrdDTO dto) {
+		Integer planID = getPlanId(dto.getPlanName(), dto.getTimes());
+		if (planID != null)
+			return planDao.findById(planID).get().getPlanPrice();
+		else
+			return null;
+	}
+
 //	取得各方案可選的收取次數
-	public List<Integer> getTimeByPlanName(String planName){
+	public List<Integer> getTimeByPlanName(String planName) {
 		System.out.println(planName);
 		return planDao.findTimeByPlanName(planName);
 	}

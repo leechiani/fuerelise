@@ -20,7 +20,6 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.furelise.common.annotation.BigDecimalFormat;
 import com.furelise.productclass.model.ProductClass;
 import com.furelise.validation.ValidByteArray;
 
@@ -41,7 +40,6 @@ public class Product implements Serializable{
 	@Column(name = "pName")
 	private String pName;
 	
-	@BigDecimalFormat(message = "商品價格必須是有效的數字")
     @NotNull(message = "不可為空")
 	@Column(name = "pPrice")
 	private BigDecimal pPrice;

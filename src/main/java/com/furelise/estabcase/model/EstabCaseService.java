@@ -118,6 +118,7 @@ public class EstabCaseService {
 		memEC.setCityCode(planOrd.getCityCode());
 		memEC.setCityName(city.getCityName());
 		memEC.setFloor(planOrd.getFloor());
+		memEC.setPickupStop(planOrd.getPickupStop());
 		memEC.setContact(planOrd.getContact());
 		memEC.setContactTel(planOrd.getContactTel());
 		memEC.setMemEstabCaseBO(getMemEstabCaseComs(estabCaseR.findByPlanOrdIDOrderByEstabCaseDateDesc(planOrdID),mem.getMemID()));

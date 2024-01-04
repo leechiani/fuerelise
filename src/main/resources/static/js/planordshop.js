@@ -16,6 +16,26 @@ function planName_selector() {
             `;
 			});
 			$("select[name='planName']").html(list_html);
+			$("select[name='planName'] option:first").prop("selected", true);
+		},
+		complete: function() {
+			let planName = $("select[name='planName']").val(); //String planName
+			let times = $("#times").val(); //String times
+			let data = {
+				"planName": planName,
+				"times": times
+			}
+			$.ajax({
+				url: "/planorddto/price", // 資料請求的網址
+				type: "POST", // GET | POST | PUT | DELETE | PATCH
+				contentType: "application/json",
+				data: JSON.stringify(data),
+				dataType: "json",
+				success: function(data) {
+					let periodLength = $("select#period option:selected").data('month');
+					$('#total').val(data  * periodLength);
+				}
+			});
 		}
 	});
 }
@@ -92,6 +112,26 @@ function city_selector() {
             `;
 			});
 			$("select#cityCode").html(list_html);
+		}
+	});
+}
+
+function total_selector() {
+	let planName = $("select[name='planName']").val(); //String planName
+	let times = $("#times").val(); //String times
+	let data = {
+		"planName": planName,
+		"times": times
+	}
+	$.ajax({
+		url: "/planorddto/price", // 資料請求的網址
+		type: "POST", // GET | POST | PUT | DELETE | PATCH
+		contentType: "application/json",
+		data: JSON.stringify(data),
+		dataType: "json",
+		success: function(data) {
+			let periodLength = $("select#period option:selected").data('month');
+			$('#total').val(data * periodLength);
 		}
 	});
 }
@@ -221,7 +261,7 @@ $(document).on("click", "#task_discount", function() {
 			success: function(item) {
 				let replacement = `<p id="replaceMe">${item}</p>`;
 
-				if (item == '折扣碼不存在') {
+				if (item == '優惠碼不存在') {
 					$("#coupon").after(replacement);
 				} else if (item == '未達折扣門檻') {
 					$("#coupon").after(replacement);
@@ -252,7 +292,7 @@ $(document).on("click", "#task_discount", function() {
 //新增，成功後跳轉綠界
 $(document).on("click", "#task_add", function() {
 	var that = $(this);
-//	$(".first select, input").prop('disabled', false); //選好的不可改
+	//	$(".first select, input").prop('disabled', false); //選好的不可改
 	let planName = $("select[name='planName']").val(); //String planName
 	let pickupTime = $("select#pickupTime").val(); //timeID
 	let period = $("select#period").val(); //periodID
@@ -300,27 +340,27 @@ $(document).on("click", "#task_add", function() {
 		success: function(item) {
 			alert("訂購成功");
 			window.location.href = '/memPlanFront.html';
-			
-//			$.ajax({
-//			    type: "POST",
-//			    url: "/ecpay/pay",
-//			    data: JSON.stringify(item),
-//			    headers: {
-//			        "Content-Type": "application/json; charset=utf-8"  // 加入 Content-Type header
-//			    },
-//			    dataType: "json",  // 預期從伺服器接收到的資料類型
-//			    success: function(response) {
-//					console.log(response);
-//					window.sessionStorage.setItem('paymentData', JSON.stringify(response));
-//				   	console.log(window.sessionStorage.getItem('paymentData'));
-////				   	window.location.href = '/ecpay/paymentForm';
-//					window.open('/ecpay/paymentForm', '_blank');
-//			    },
-//			    error: function(xhr) {
-//			        alert("發生錯誤");
-//			        location.reload();		        
-//			    }
-//			});			
+
+			//			$.ajax({
+			//			    type: "POST",
+			//			    url: "/ecpay/pay",
+			//			    data: JSON.stringify(item),
+			//			    headers: {
+			//			        "Content-Type": "application/json; charset=utf-8"  // 加入 Content-Type header
+			//			    },
+			//			    dataType: "json",  // 預期從伺服器接收到的資料類型
+			//			    success: function(response) {
+			//					console.log(response);
+			//					window.sessionStorage.setItem('paymentData', JSON.stringify(response));
+			//				   	console.log(window.sessionStorage.getItem('paymentData'));
+			////				   	window.location.href = '/ecpay/paymentForm';
+			//					window.open('/ecpay/paymentForm', '_blank');
+			//			    },
+			//			    error: function(xhr) {
+			//			        alert("發生錯誤");
+			//			        location.reload();		        
+			//			    }
+			//			});			
 
 		}, error: function(xhr) {         // request 發生錯誤的話執行
 			if (xhr.status === 400) {
@@ -339,7 +379,7 @@ $(document).on("click", "#task_add", function() {
 			}
 		},
 		complete: function() {
-			
+
 		}
 	});
 });
@@ -347,16 +387,16 @@ $(document).on("click", "#task_add", function() {
 ////更改付款狀態
 //$(document).on("click", "#task_next", function() {
 //	var paymentDataString = sessionStorage.getItem('paymentData');
-//	
+//
 //	var paymentData = JSON.parse(paymentDataString);
-//	
+//
 //	var merchantTradeNo = paymentData.formData.MerchantTradeNo;
-//	
+//
 //	console.log("quesr status, MerchantTradeNo: " + merchantTradeNo);
 //
 //	$.ajax({
-//		url: "http://localhost:8080/ecpay/status", 
-//		type: "GET", 
+//		url: "http://localhost:8080/ecpay/status",
+//		type: "GET",
 //		// data: form_data, // 將物件資料(不用雙引號) 傳送到指定的 url
 //		data: { tradeNo: merchantTradeNo},
 //		dataType: "json", // 預期會接收到回傳資料的格式： json | xml | html
@@ -364,13 +404,13 @@ $(document).on("click", "#task_add", function() {
 //			if(item){
 //				console.log('pay success')
 //				$.ajax({
-//					url: "http://localhost:8080/ecpay/updateStatus", 
-//					type: "POST", 
+//					url: "http://localhost:8080/ecpay/updateStatus",
+//					type: "POST",
 //					// data: form_data, // 將物件資料(不用雙引號) 傳送到指定的 url
 //					data: { tradeNo: merchantTradeNo, status: '210001'},
 //					dataType: "json", // 預期會接收到回傳資料的格式： json | xml | html
 //					success: function(item) {
-//						
+//
 //					}
 //				});
 //				alert('該筆訂單付款已完成, 待實做後續功能')
@@ -380,7 +420,7 @@ $(document).on("click", "#task_add", function() {
 //			}
 //		}
 //	});
-//	
+//
 //
 //
 //});
