@@ -43,9 +43,4 @@ public class City implements Serializable {
 		super();
 	}
 
-	public City(String cityCode, String cityName) {
-		this.cityCode = cityCode;
-		this.cityName = cityName;
-	}
-
 }
