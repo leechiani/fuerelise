@@ -19,16 +19,16 @@ public class BackendLoginFilter extends OncePerRequestFilter {
 
     // 定義需要進行過濾的路徑清單
     private final List<String> pathsToFilter = Arrays.asList(
-            "/sale/all",
+//            "/sale/all",
             "product-backen/all",
             "/productclass/all",
             "/backen-ord/",
-            "/planord/",
-            "/plan/",
-            "/city/",
-            "/period/",
-            "/pickuptime/",
-            "/pickupway/",
+//            "/planord/",
+//            "/plan/",
+//            "/city/",
+//            "/period/",
+//            "/pickuptime/",
+//            "/pickupway/",
             "/mem/list",
             "/emp/list",
             "/emp/empchecklist",
