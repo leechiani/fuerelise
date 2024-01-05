@@ -74,8 +74,7 @@ public class PickupTimeCon {
 	@DeleteMapping("deleting")
 	@ResponseBody
 	public String deletePickupTime(@RequestBody PickupTime req) {
-		String result = pickupTimeSvc.deletePickupTime(req.getTimeID());
-		return result;
+		return pickupTimeSvc.deletePickupTime(req.getTimeID());
 	}
 //	
 //	@GetMapping("{timeID}")
