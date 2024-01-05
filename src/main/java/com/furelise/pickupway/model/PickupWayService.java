@@ -50,9 +50,6 @@ public class PickupWayService {
 			result = wayID + " is in use!";
 		return result;
 	}
-//	public void deletePickupWay(Integer wayID) {
-//		dao.deleteById(wayID);
-//	}
 
 	public List<PickupWay> getAllPickupWay() {
 		return dao.findAll();
