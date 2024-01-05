@@ -8,8 +8,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableScheduling
-@PropertySource(value = ("classpath:schedule.properties"))
+//@EnableScheduling
+//@PropertySource(value = ("classpath:schedule.properties"))
 public class FureliseApplication {
 
     public static void main(String[] args) {

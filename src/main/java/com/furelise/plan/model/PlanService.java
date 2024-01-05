@@ -2,6 +2,7 @@ package com.furelise.plan.model;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -24,10 +25,10 @@ public class PlanService {
 	public String addPlan(Plan req) {
 		BigDecimal planPrice = req.getPlanPrice();
 		BigDecimal planPricePerCase = req.getPlanPricePerCase();
-		if (planPrice.compareTo(planPricePerCase) < 0) {
-			return "價格不可低於案件報酬";
-		} else if (dao.existsByPlanName(req.getPlanName())) {
+		if (dao.existsByPlanName(req.getPlanName())) {
 			return "方案名稱不可重複";
+		} else if (planPrice.compareTo(planPricePerCase) < 0) {
+			return "價格不可低於案件報酬";
 		} else {
 			for (int i = 0; i < 5; i++) {
 				Plan plan = new Plan(req.getPlanName(), req.getLiter(), planPrice.multiply(new BigDecimal(i + 1)),
@@ -43,37 +44,47 @@ public class PlanService {
 		return "新增成功";
 	}
 
+	//方案名、公升數同步更新
 	@Transactional
 	public String updatePlan(Plan req) {
 		BigDecimal planPrice = req.getPlanPrice();
 		BigDecimal planPricePerCase = req.getPlanPricePerCase();
-		String oldName = dao.findById(req.getPlanID()).get().getPlanName();
+		Plan p = dao.findById(req.getPlanID()).get();
+		String oldName = p.getPlanName();
+		Integer oldLiter = p.getLiter(); 
+		
 		if (planPrice.compareTo(planPricePerCase) < 0) {
 			return "價格不可低於案件報酬";
-		} else if (req.getPlanName().equals(oldName)) {
-			Plan plan = new Plan(req.getPlanID(), req.getPlanName(), req.getLiter(), planPrice, planPricePerCase,
-					req.getTimes(), req.getPlanUpload());
+		}
+		//變更方案名，方案名重複
+		else if (!req.getPlanName().equals(oldName) && dao.existsByPlanName(req.getPlanName())) {
+			return "方案名稱不可重複";
+		}
+		//未變更方案名，未變更公升數>單獨更新
+		else if (req.getPlanName().equals(oldName) && req.getLiter().equals(oldLiter)) {
+			Plan plan = new Plan(req.getPlanID(), req.getPlanName(), 
+						req.getLiter(), planPrice, planPricePerCase,
+						req.getTimes(), req.getPlanUpload());
 			dao.save(plan);
 			return "更新成功";
-		} else if (dao.existsByPlanName(req.getPlanName())) {
-			return "方案名稱不可重複";
-			// 修改五筆方案名
-		} else {
-			// 更新中的方案ID
+		}
+		// 修改五筆方案名及公升數
+		else {
 			try {
+				// 更新中的方案ID
 				Integer thisPlanId = req.getPlanID();
-				Plan plan = new Plan(thisPlanId, req.getPlanName(), req.getLiter(), planPrice, planPricePerCase,
-						req.getTimes(), req.getPlanUpload());
+				Plan plan = new Plan(thisPlanId, req.getPlanName(), 
+									req.getLiter(), planPrice, planPricePerCase,
+									req.getTimes(), req.getPlanUpload());
 				dao.save(plan);
 
 				// 找出其餘ID
 				List<Integer> pList = dao.findIdByPlanName(oldName);
-
 				for (Integer id : pList) {
-					if (id != thisPlanId) {
+					if (!id.equals(thisPlanId)) {
 						Plan other = dao.findById(id).get();
-						// 僅更新方案名
-						Plan newPlan = new Plan(id, req.getPlanName(), other.getLiter(),
+						// 僅更新方案名及公升數
+						Plan newPlan = new Plan(id, req.getPlanName(), req.getLiter(),
 								other.getPlanPrice().stripTrailingZeros(),
 								other.getPlanPricePerCase().stripTrailingZeros(), other.getTimes(),
 								other.getPlanUpload());

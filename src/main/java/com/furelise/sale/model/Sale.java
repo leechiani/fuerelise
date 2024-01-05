@@ -1,7 +1,6 @@
 package com.furelise.sale.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.furelise.common.annotation.BigDecimalFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -40,14 +39,12 @@ public class Sale implements Serializable {
     @Column(name = "saleEnd")
     private LocalDate saleEnd;
 
-    @BigDecimalFormat(message = "請填入數字")
     @NotNull(message = "不可為空")
 //	@Pattern(regexp = "^[0-9]$", message = "請填入數字")
 //	@NotBlank(message = "請勿空白")
     @Column(name = "disRequire")
     private BigDecimal disRequire;
 
-    @BigDecimalFormat(message = "請填入數字")
     @NotNull(message = "不可為空")
 //	@Pattern(regexp = "^[0-9]$", message = "請填入數字")
 //	@NotBlank(message = "請勿空白")

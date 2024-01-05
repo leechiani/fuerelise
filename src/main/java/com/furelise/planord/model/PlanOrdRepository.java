@@ -13,7 +13,7 @@ import com.furelise.planord.model.*;
 public interface PlanOrdRepository extends JpaRepository<PlanOrd, Integer>{
 	List<PlanOrd> findByMemID(Integer memID);
 	
-	PlanOrd findByMemIDAndPlanStatusID(Integer memID, Integer planStatusID);
+	List<PlanOrd> findByMemIDAndPlanStatusID(Integer memID, Integer planStatusID);
 	
 	//planOrdService
 	@Query("SELECT p FROM PlanOrd p WHERE p.memID = :memID AND p.planEnd > CURRENT_DATE + 3")

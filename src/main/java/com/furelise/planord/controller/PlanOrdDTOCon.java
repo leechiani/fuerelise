@@ -1,5 +1,6 @@
 package com.furelise.planord.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,11 +29,9 @@ public class PlanOrdDTOCon {
 	// add data, for ajax using
 	@PostMapping("/adding")
 	public PlanOrd addPlanOrd(@Valid @RequestBody PlanOrdDTO dto, HttpServletRequest req) {
-		//測試時先把mem寫死(ajax測試時要搭配好planOrdCon的verifyPlanOrdPurchase)
 		Mem mem = (Mem)(req.getSession().getAttribute("mem"));
 		if (mem != null){
 			Integer memID = mem.getMemID();
-//			Integer memID = 110002;
 			return planOrdSvc.addPlanOrd(dto, memID); //回傳新增的方案訂單物件
 		} else 
 			return null;
@@ -42,5 +41,11 @@ public class PlanOrdDTOCon {
 	@GetMapping("/finding")
 	public List<PlanOrdDTO> getAllPlanOrds() {
 		return planOrdSvc.getPlanOrdInfo();
+	}
+	
+	
+	@PostMapping("/price")
+	public BigDecimal getPrice(@RequestBody PlanOrdDTO dto) {
+		return planOrdSvc.getPrice(dto);
 	}
 }

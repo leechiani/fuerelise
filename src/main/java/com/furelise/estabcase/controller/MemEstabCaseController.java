@@ -31,7 +31,8 @@ public class MemEstabCaseController {
 		Mem mem = (Mem) authService.validate(req, "mem");
 //		System.out.println("mem");
 //		System.out.println(mem);
-		PlanOrd planOrd = planOrdRepository.findByMemIDAndPlanStatusID(mem.getMemID(), 210001);
+		PlanOrd planOrd = planOrdRepository.findByMemIDAndPlanStatusID(mem.getMemID(), 210001).get(0);
+		System.out.println(planOrd);
         return estabCaseService.getMemEstabCase(planOrd.getPlanOrdID());
 	}
 
