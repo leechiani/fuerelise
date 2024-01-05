@@ -10,15 +10,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlanRepository extends JpaRepository<Plan, Integer>{
 
-	//PlanOrdController // create planName drop down menu
+	//PlanOrdService, create planName drop down menu
 	List<Plan> findByTimes(Integer times);
 	
+	//PlanOrdService, create planOrd
 	@Query("SELECT planID FROM Plan WHERE planName = :planName AND times = :times")
 	Integer findIdByPlanNameAndTimes(@Param(value = "planName") String planName, @Param(value = "times") Integer times);
 
-	@Query("SELECT DISTINCT times FROM Plan WHERE planName = :planName")
+	@Query("SELECT times FROM Plan WHERE planName = :planName")
 	List<Integer> findTimeByPlanName(@Param(value="planName") String planName);
 	
+	//PlanService, update, delete
 	@Query("SELECT planID FROM Plan WHERE planName = :planName")
 	List<Integer> findIdByPlanName(@Param(value = "planName") String planName);
 	

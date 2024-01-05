@@ -54,8 +54,8 @@ public class PlanOrdService {
 
 	public PlanOrd addPlanOrd(PlanOrdDTO req, Integer memID) {
 		// 狀態碼210003=待付款，210001進行中
-		Integer planID = getPlanId(req.getPlanName(), req.getTimes());
-		String day = getPickupDay(req.getWeekDay());
+		Integer planID = findPlanId(req.getPlanName(), req.getTimes());
+		String day = findPickupDay(req.getWeekDay());
 
 		PlanOrd planOrd = new PlanOrd(planID, req.getTimeID(), req.getPeriodID(), day, req.getWayID(), memID,
 				req.getPlanStart(), req.getPlanEnd(), req.getCityCode(), req.getFloor(), req.getPickupStop(),
@@ -63,7 +63,6 @@ public class PlanOrdService {
 
 		PlanOrd createPlanOrd = dao.save(planOrd);
 
-		System.out.println(planOrd);
 		// 拆單
 		Plan plan = planDao.findById(createPlanOrd.getPlanID()).orElseThrow();
 		Period period = periodDao.findById(createPlanOrd.getPeriodID()).orElseThrow();
@@ -74,12 +73,12 @@ public class PlanOrdService {
 	}
 
 	// 方案名+收取次數取得方案ID
-	private Integer getPlanId(String planName, String times) {
+	private Integer findPlanId(String planName, String times) {
 		return planDao.findIdByPlanNameAndTimes(planName, Integer.valueOf(times));
 	}
 
 	// 取得收取日字串
-	private String getPickupDay(String[] weekDay) {
+	private String findPickupDay(String[] weekDay) {
 		StringBuilder initDay = new StringBuilder("0000000");
 		// checkbox回傳String[] weekDay，長度=checked幾項
 		for (int i = 0; i < weekDay.length; i++) {
@@ -126,7 +125,8 @@ public class PlanOrdService {
 			total = p.getTotal();
 			planStatus = getPlanStatus(p.getPlanStatusID());
 
-			PlanOrdDTO info = new PlanOrdDTO(planOrdId, memName, planName, planStart, planEnd, total, planStatus);
+			PlanOrdDTO info = new PlanOrdDTO(planOrdId, memName, planName, 
+							  planStart, planEnd, total, planStatus);
 			infoList.add(info);
 		}
 		return infoList;
@@ -164,7 +164,7 @@ public class PlanOrdService {
 
 // ↑↑↑↑↑for list name instead of ID, PlanOrdController↑↑↑↑
 
-	// 找當前使用者是否有待收取舊訂單且新訂單開始日早於舊訂單結束日
+	// 當前使用者是否有待收取訂單，且新訂單開始日早於舊訂單結束日
 	public boolean verifyPlanOrdPurchase(Integer memID, String planStart) {
 		// find planOrd of a member
 		boolean proceed = false;
@@ -211,12 +211,12 @@ public class PlanOrdService {
 		return sb.toString();
 	}
 
-	// 取得不重複方案名 + 1次的價格
+//  ↓↓↓↓for PlanOrdController drop down menu↓↓↓↓
+	// 取得不重複PlanName
 	public List<Plan> findByTimes() {
 		return planDao.findByTimes(1);
 	}
 
-	// for PlanOrdController drop down menu
 	// 取得PickupTime
 	public List<PickupTime> getPickupTime() {
 		return pickupTimeDao.findAll();
@@ -236,16 +236,18 @@ public class PlanOrdService {
 	public List<City> getCity() {
 		return cityDao.findAll();
 	}
+//	↑↑↑↑for PlanOrdController drop down menu↑↑↑↑
 
+	//取得小計
 	public BigDecimal getPrice(PlanOrdDTO dto) {
-		Integer planID = getPlanId(dto.getPlanName(), dto.getTimes());
+		Integer planID = findPlanId(dto.getPlanName(), dto.getTimes());
 		if (planID != null)
 			return planDao.findById(planID).get().getPlanPrice();
 		else
 			return null;
 	}
 
-//	取得各方案可選的收取次數
+//	取得各方案可選的收取次數(not in use)
 	public List<Integer> getTimeByPlanName(String planName) {
 		System.out.println(planName);
 		return planDao.findTimeByPlanName(planName);

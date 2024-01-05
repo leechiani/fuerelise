@@ -25,8 +25,7 @@ import com.furelise.plan.model.*;
 import com.furelise.mem.model.entity.*;
 
 @Controller
-//@RequestMapping("/planord")
-public class PlanOrdController {
+public class PlanOrdCon {
 
 	@Autowired
 	PlanOrdService planOrdSvc;
@@ -146,47 +145,4 @@ public class PlanOrdController {
 		} else
 			return false;		
 	}
-
-	// return view
-	@GetMapping("/planord/update")
-	public String updatePlanOrd(@RequestParam String planOrdID, Model model) {
-		PlanOrd planOrd = planOrdSvc.getPlanOrdById(Integer.valueOf(planOrdID));
-		Plan plan = planSvc.getPlanById(planOrd.getPlanID());
-
-		model.addAttribute("times", plan.getTimes());
-		model.addAttribute("planOrdID", planOrdID);
-		model.addAttribute("memName", planOrdSvc.getMemNameById(planOrd.getMemID()));
-		model.addAttribute("planName", plan.getPlanName());
-		model.addAttribute("timeRange", planOrdSvc.getTimeRange(planOrd.getTimeID()));
-		model.addAttribute("day", planOrd.getDay());
-		model.addAttribute("wayName", planOrdSvc.getWayName(planOrd.getWayID()));
-		model.addAttribute("total", planOrd.getTotal());
-		model.addAttribute("planPeriod", planOrdSvc.getPlanPeriod(planOrd.getPeriodID()));
-		model.addAttribute("planStart", planOrd.getPlanStart());
-		model.addAttribute("planEnd", planOrd.getPlanEnd());
-		model.addAttribute("cityCode", planOrd.getCityCode());
-		model.addAttribute("floor", planOrd.getFloor());
-		model.addAttribute("pickupStop", planOrd.getPickupStop());
-		model.addAttribute("contact", planOrd.getContact());
-		model.addAttribute("contactTel", planOrd.getContactTel());
-		model.addAttribute("planOrdDate", planOrd.getPlanOrdDate());
-		model.addAttribute("amendLog", planOrd.getAmendLog());
-		model.addAttribute("planStatus", planOrdSvc.getPlanStatus(planOrd.getPlanStatusID()));
-		return "planord_update";
-	}
-
-//	// amend data, for ajax using
-//	
-//	@PutMapping("/updating")
-//	@ResponseBody
-//	public PlanOrd updatePlanOrd(@RequestBody PlanOrd req) {
-//		return planOrdSvc.updatePlanOrd(req);
-//	}
-
-//	// 單筆查詢
-//	@GetMapping("/{planOrdID}")
-//	@ResponseBody
-//	public PlanOrd getPlanOrdById(@PathVariable Integer planOrdID) {
-//		return planOrdSvc.getPlanOrdById(planOrdID);
-//	}
 }
