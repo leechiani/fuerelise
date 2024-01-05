@@ -41,14 +41,12 @@ public class PickupWayService {
 	}
 
 	public String deletePickupWay(Integer wayID) {
-		String result = "";
 		List<PlanOrd> list = planOrdDao.findByWayID(wayID);
 		if (list.isEmpty()) {
 			dao.deleteById(wayID);
-			result = "deleted successfully";
+			return "deleted successfully";
 		} else
-			result = wayID + " is in use!";
-		return result;
+			return wayID + " is in use!";
 	}
 
 	public List<PickupWay> getAllPickupWay() {
