@@ -15,16 +15,16 @@ public interface PlanOrdRepository extends JpaRepository<PlanOrd, Integer>{
 	
 	List<PlanOrd> findByMemIDAndPlanStatusID(Integer memID, Integer planStatusID);
 	
-	//planOrdService
-	@Query("SELECT p FROM PlanOrd p WHERE p.memID = :memID AND p.planEnd > CURRENT_DATE + 3")
-	List<PlanOrd> findLaterPlanEnd(@Param(value = "memID") Integer memID);
-	
-	//pickupWayService
+	//pickupWayService，deleting
 	List<PlanOrd> findByWayID(Integer wayID);
 	
-	//planService
+	//planService，deleting
 	List<PlanOrd> findByPlanID(Integer planID);
 	
-	//pickupTimeService
+	//pickupTimeService，deleting
 	List<PlanOrd> findByTimeID(Integer timeID);
+	
+	//periodService，deleting
+	List<PlanOrd> findByPeriodID(Integer periodID);
+	
 }
