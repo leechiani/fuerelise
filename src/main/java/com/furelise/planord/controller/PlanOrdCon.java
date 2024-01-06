@@ -38,13 +38,6 @@ public class PlanOrdCon {
 		return "planord_list";
 	}
 
-	// list data, for ajax using
-	@GetMapping("/planord/all")
-	@ResponseBody
-	public List<PlanOrd> getAllPlanOrds() {
-		return planOrdSvc.getAllPlanOrd();
-	}
-
 	// return view planord_detail
 	@GetMapping("/planord/detail")
 	public String planDetail(@RequestParam String planOrdID, Model model) {

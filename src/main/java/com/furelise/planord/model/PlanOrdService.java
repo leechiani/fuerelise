@@ -49,6 +49,7 @@ public class PlanOrdService {
 
 	@Autowired
 	PlanStatusRepository planStatusDao;
+	
 	@Autowired
 	SplitPlanOrdService splitPlanOrdService;
 
@@ -88,14 +89,6 @@ public class PlanOrdService {
 			initDay.setCharAt(dayIndex, '1');
 		}
 		return initDay.toString();
-	}
-
-	public void deletePlanOrd(Integer planOrdID) {
-		dao.deleteById(planOrdID);
-	}
-
-	public List<PlanOrd> getAllPlanOrd() {
-		return dao.findAll();
 	}
 
 	public PlanOrd getPlanOrdById(Integer planOrdID) {
