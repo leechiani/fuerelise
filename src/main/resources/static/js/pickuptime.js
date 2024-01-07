@@ -59,8 +59,8 @@ $("button#task_add").on("click", function() {
 
 				error: function(xhr) {         // request 發生錯誤的話執行
 					if (xhr.status === 400) {
-						var errorMessage = xhr.responseText;
-						alert(errorMessage);
+						var error = JSON.parse(xhr.responseText);
+						alert(error.message);
 					} else {
 						alert('連線異常');
 					}
@@ -138,8 +138,8 @@ $("button#task_update").on("click", function() {
 			},
 			error: function(xhr) {         // request 發生錯誤的話執行
 				if (xhr.status === 400) {
-					var errorMessage = xhr.responseText;
-					alert(errorMessage);
+					var error = JSON.parse(xhr.responseText);
+					alert(error.message);
 				} else {
 					alert('連線異常');
 				}

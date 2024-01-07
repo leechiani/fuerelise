@@ -32,7 +32,7 @@ public class Period implements Serializable{
     private Integer periodID;
     
     @Min(value=1, message="請填正整數")
-    @NotNull
+    @NotNull(message="請勿空白")
     @Column(name = "planPeriod")
     private Integer planPeriod;
     
