@@ -41,15 +41,12 @@ public class PickupTimeService {
 	}
 
 	public String deletePickupTime(Integer timeID) {
-		String result = "";
 		List<PlanOrd> list = planOrdDao.findByTimeID(timeID);
-		System.out.println(list);
 		if (list.isEmpty()) {
 			dao.deleteById(timeID);
-			result = "deleted successfully";
+			return "deleted successfully";
 		} else
-			result = timeID + " is in use!";
-		return result;
+			return timeID + " is in use!";
 	}
 
 	public List<PickupTime> getAllPickupTime() {

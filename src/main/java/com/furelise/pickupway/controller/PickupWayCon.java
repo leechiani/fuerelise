@@ -71,8 +71,7 @@ public class PickupWayCon {
 	@DeleteMapping("/deleting")
 	@ResponseBody
 	public String deletePickupWay(@RequestBody PickupWay req) {
-		String result = pickupWaySvc.deletePickupWay(req.getWayID());
-		return result;
+		return pickupWaySvc.deletePickupWay(req.getWayID());
 	}
 
 

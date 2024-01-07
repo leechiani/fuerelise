@@ -12,7 +12,7 @@ function planName_selector() {
 			let list_html = "";
 			$.each(data, function(index, item) {
 				list_html += `
-                <option value="${item.planName}" data-price="${item.planPrice}">${item.planName}(${item.liter}公升)</option>
+                <option value="${item.planName}">${item.planName}(${item.liter}公升)</option>
             `;
 			});
 			$("select[name='planName']").html(list_html);
@@ -33,7 +33,7 @@ function planName_selector() {
 				dataType: "json",
 				success: function(data) {
 					let periodLength = $("select#period option:selected").data('month');
-					$('#total').val(data  * periodLength);
+					$('#total').val(data * periodLength);
 				}
 			});
 		}
@@ -201,7 +201,7 @@ $(document).on("click", "button#show_sale", function() {
 	                                    <span class="input-group-text">$</span>
 	                                    <input id="after_discount" type="text" readonly>
 	                                </div>	                
-	                                <button type="button" id="task_add" class="sl_btn_chakan" style="width:50%;" onclick="submitForm()">結帳</button>                
+	                                <button type="button" id="task_add" class="sl_btn_chakan" style="width:50%;">結帳</button>                
 	                                <hr>
 	                            `;
 							$(that).after(list_html);
@@ -292,139 +292,93 @@ $(document).on("click", "#task_discount", function() {
 //新增，成功後跳轉綠界
 $(document).on("click", "#task_add", function() {
 	var that = $(this);
-	//	$(".first select, input").prop('disabled', false); //選好的不可改
-	let planName = $("select[name='planName']").val(); //String planName
-	let pickupTime = $("select#pickupTime").val(); //timeID
-	let period = $("select#period").val(); //periodID
-	let times = $("#times").val(); //String times
-
-	let weekDay = [];
-	$.each($("[name='day']:checked"), function() {
-		weekDay.push($(this).val());
-	}); // String[] weekDay
-
-	let pickupWay = $("select#pickupWay").val(); //wayID
 	let planStart = $("input[name='planStart']").val(); //planStart
-	let planEnd = $("input[name='planEnd']").val(); //planEnd
-	let contact = $("input#contact").val().trim(); //contact
-	let contactTel = $("input#contactTel").val().trim(); //contactTel
-	let cityCode = $("select#cityCode").val(); //cityCode
-	let floor = $("input#floor").val().trim(); //floor
-	let pickupStop = $("input#pickupStop").val().trim(); //pickupstop
-	let afterTotal = $("input#after_discount").val(); //total after discount
-
-	let form_data = {
-		"planName": planName,
-		"timeID": pickupTime,
-		"periodID": period,
-		"times": times,
-		"weekDay": weekDay,
-		"wayID": pickupWay,
-		"planStart": planStart,
-		"planEnd": planEnd,
-		"contact": contact,
-		"contactTel": contactTel,
-		"cityCode": cityCode,
-		"floor": floor,
-		"pickupStop": pickupStop,
-		"afterTotal": afterTotal
-	};
-
 	$.ajax({
-		url: "/planorddto/adding", // 資料請求的網址
+		url: "/planmall/checkenddate", // 資料請求的網址
 		type: "POST", // GET | POST | PUT | DELETE | PATCH
-		// data: form_data, // 將物件資料(不用雙引號) 傳送到指定的 url
+		// data: { "planStart": planStart }, // 將物件資料(不用雙引號) 傳送到指定的 url
+		data: JSON.stringify({ "planStart": planStart }),
 		contentType: "application/json",
-		data: JSON.stringify(form_data),
 		dataType: "json", // 預期會接收到回傳資料的格式： json | xml | html
-		success: function(item) {
-			alert("訂購成功");
-			window.location.href = '/memPlanFront.html';
+		success: function(data) {
+			if (!data) {
+				alert('尚有尚未到期訂單');
+			} else {
+				let planName = $("select[name='planName']").val(); //String planName
+				let pickupTime = $("select#pickupTime").val(); //timeID
+				let period = $("select#period").val(); //periodID
+				let times = $("#times").val(); //String times
 
-			//			$.ajax({
-			//			    type: "POST",
-			//			    url: "/ecpay/pay",
-			//			    data: JSON.stringify(item),
-			//			    headers: {
-			//			        "Content-Type": "application/json; charset=utf-8"  // 加入 Content-Type header
-			//			    },
-			//			    dataType: "json",  // 預期從伺服器接收到的資料類型
-			//			    success: function(response) {
-			//					console.log(response);
-			//					window.sessionStorage.setItem('paymentData', JSON.stringify(response));
-			//				   	console.log(window.sessionStorage.getItem('paymentData'));
-			////				   	window.location.href = '/ecpay/paymentForm';
-			//					window.open('/ecpay/paymentForm', '_blank');
-			//			    },
-			//			    error: function(xhr) {
-			//			        alert("發生錯誤");
-			//			        location.reload();		        
-			//			    }
-			//			});			
+				let weekDay = [];
+				$.each($("[name='day']:checked"), function() {
+					weekDay.push($(this).val());
+				}); // String[] weekDay
 
-		}, error: function(xhr) {         // request 發生錯誤的話執行
-			if (xhr.status === 400) {
-				var errorMessage = xhr.responseText;
-				alert(errorMessage);
-				$(".first select, input").prop('disabled', true);
-				$("input#contactTel").prop('disabled', false);
-				$("input#contactTel").prop('autofocus', true);
-			} else if (xhr.status === 200) {
-				$(".first select, input").prop('disabled', true);
-				alert('請重新登入');
+				let pickupWay = $("select#pickupWay").val(); //wayID
+				let planStart = $("input[name='planStart']").val(); //planStart
+				let planEnd = $("input[name='planEnd']").val(); //planEnd
+				let contact = $("input#contact").val().trim(); //contact
+				let contactTel = $("input#contactTel").val().trim(); //contactTel
+				let cityCode = $("select#cityCode").val(); //cityCode
+				let floor = $("input#floor").val().trim(); //floor
+				let pickupStop = $("input#pickupStop").val().trim(); //pickupstop
+				let afterTotal = $("input#after_discount").val(); //total after discount
+
+				let form_data = {
+					"planName": planName,
+					"timeID": pickupTime,
+					"periodID": period,
+					"times": times,
+					"weekDay": weekDay,
+					"wayID": pickupWay,
+					"planStart": planStart,
+					"planEnd": planEnd,
+					"contact": contact,
+					"contactTel": contactTel,
+					"cityCode": cityCode,
+					"floor": floor,
+					"pickupStop": pickupStop,
+					"afterTotal": afterTotal
+				};
+
+				$.ajax({
+					url: "/planorddto/adding", // 資料請求的網址
+					type: "POST", // GET | POST | PUT | DELETE | PATCH
+					// data: form_data, // 將物件資料(不用雙引號) 傳送到指定的 url
+					contentType: "application/json",
+					data: JSON.stringify(form_data),
+					dataType: "json", // 預期會接收到回傳資料的格式： json | xml | html
+					success: function(item) {
+						alert("訂購成功");
+						window.location.href = '/memPlanFront.html';
+
+					}, error: function(xhr) {         // request 發生錯誤的話執行
+						if (xhr.status === 400) {
+							var errorMessage = xhr.responseText;
+							alert(errorMessage);
+							$(".first select, input").prop('disabled', true);
+							$("input#contactTel").prop('disabled', false);
+							$("input#contactTel").prop('autofocus', true);
+						} else if (xhr.status === 200) {
+							$(".first select, input").prop('disabled', true);
+							alert('請重新登入');
+						}
+						else {
+							alert('連線異常');
+							location.reload();
+						}
+					},
+					complete: function() {
+
+					}
+				});
 			}
-			else {
-				alert('連線異常');
-				location.reload();
-			}
-		},
-		complete: function() {
-
 		}
 	});
+
+
+
 });
-
-////更改付款狀態
-//$(document).on("click", "#task_next", function() {
-//	var paymentDataString = sessionStorage.getItem('paymentData');
-//
-//	var paymentData = JSON.parse(paymentDataString);
-//
-//	var merchantTradeNo = paymentData.formData.MerchantTradeNo;
-//
-//	console.log("quesr status, MerchantTradeNo: " + merchantTradeNo);
-//
-//	$.ajax({
-//		url: "http://localhost:8080/ecpay/status",
-//		type: "GET",
-//		// data: form_data, // 將物件資料(不用雙引號) 傳送到指定的 url
-//		data: { tradeNo: merchantTradeNo},
-//		dataType: "json", // 預期會接收到回傳資料的格式： json | xml | html
-//		success: function(item) {
-//			if(item){
-//				console.log('pay success')
-//				$.ajax({
-//					url: "http://localhost:8080/ecpay/updateStatus",
-//					type: "POST",
-//					// data: form_data, // 將物件資料(不用雙引號) 傳送到指定的 url
-//					data: { tradeNo: merchantTradeNo, status: '210001'},
-//					dataType: "json", // 預期會接收到回傳資料的格式： json | xml | html
-//					success: function(item) {
-//
-//					}
-//				});
-//				alert('該筆訂單付款已完成, 待實做後續功能')
-//			}else{
-//				console.log('pay fail')
-//				alert('該筆訂單付款尚未完成付款')
-//			}
-//		}
-//	});
-//
-//
-//
-//});
-
 
 // =============
 /*以下要用要改<button type="button" id="task_add" class="sl_btn_chakan" style="width:50%;">繼續</button>

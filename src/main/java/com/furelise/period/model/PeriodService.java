@@ -42,15 +42,13 @@ public class PeriodService {
 	}
 
 	public String deletePeriod(Integer periodID) {
-		String result = "deleted successfully";
-		for (PlanOrd p : planOrdDao.findAll()) {
-			if (p.getPeriodID().equals(periodID)) { // check if is used
-				result = periodID + " is in use!";
-			}
-		}
-		if (result.equals("deleted successfully"))
+		List<PlanOrd> pl = planOrdDao.findByPeriodID(periodID);
+		if(pl.isEmpty()) {
 			dao.deleteById(periodID);
-		return result;
+			return "deleted successfully";
+		} else {
+			return periodID + " is in use!";
+		}
 	}
 
 	public List<Period> getAllPeriod() {

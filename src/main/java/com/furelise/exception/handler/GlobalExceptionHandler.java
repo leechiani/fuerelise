@@ -110,7 +110,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e){
-        return new ResponseEntity<>("輸入格式不正確", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("{ \"message\": \"輸入格式不正確\"}", HttpStatus.BAD_REQUEST);
     }
     
     @ExceptionHandler(MaxUploadSizeExceededException.class)

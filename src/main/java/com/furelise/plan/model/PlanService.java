@@ -31,8 +31,9 @@ public class PlanService {
 			return "價格不可低於案件報酬";
 		} else {
 			for (int i = 0; i < 5; i++) {
-				Plan plan = new Plan(req.getPlanName(), req.getLiter(), planPrice.multiply(new BigDecimal(i + 1)),
-						planPricePerCase, (i + 1), req.getPlanUpload());
+				Plan plan = new Plan(req.getPlanName(), req.getLiter(), 
+							planPrice.multiply(new BigDecimal(i + 1)),
+							planPricePerCase, (i + 1), req.getPlanUpload());
 				try {
 					dao.save(plan);
 				} catch (Exception e) {
@@ -85,9 +86,9 @@ public class PlanService {
 						Plan other = dao.findById(id).get();
 						// 僅更新方案名及公升數
 						Plan newPlan = new Plan(id, req.getPlanName(), req.getLiter(),
-								other.getPlanPrice().stripTrailingZeros(),
-								other.getPlanPricePerCase().stripTrailingZeros(), other.getTimes(),
-								other.getPlanUpload());
+									   other.getPlanPrice().stripTrailingZeros(),
+									   other.getPlanPricePerCase().stripTrailingZeros(), 
+									   other.getTimes(), other.getPlanUpload());
 						dao.save(newPlan);
 					}
 				}

@@ -91,22 +91,9 @@ public class CityCon {
 		}
 	}
 
-//	@PostMapping("/update")
-//	public String cityUpdate(@Valid @ModelAttribute City city, BindingResult result, Model model) {
-//		if (result.hasErrors()) {
-//			return "b_city_update";
-//		} else {
-//			citySvc.updateCity(city);
-//			return "redirect:/city/all";
-//		}
-//	}
-
 	@PostMapping("/delete")
-	public String cityDelete(@RequestParam String cityID, Model model) {
+	public String cityDelete(@RequestParam String cityID) {
 		citySvc.delete(Integer.valueOf(cityID));
-		model.addAttribute("cityList", citySvc.getAllCity());
-
 		return "redirect:/city/all";
 	}
-
 }

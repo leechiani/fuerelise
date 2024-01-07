@@ -55,7 +55,7 @@ $("button#task_add").on("click", function() {
 				statusCode: {                 // 狀態碼
 				},
 				success: function(item) {
-					if(item == '新增成功') {
+					if (item == '新增成功') {
 						alert(item);
 						window.location.href = 'add';
 					} else {
@@ -65,8 +65,8 @@ $("button#task_add").on("click", function() {
 				},
 				error: function(xhr) {         // request 發生錯誤的話執行
 					if (xhr.status === 400) {
-						var errorMessage = xhr.responseText;
-						let replacement = `<p id="replaceMe">${errorMessage}</p>`;
+						var error = JSON.parse(xhr.responseText);
+					    let replacement = `<p id="replaceMe">${error.message}</p>`;
 						$("#verify_here").html(replacement);
 					} else {
 						alert('連線異常');
@@ -93,19 +93,19 @@ $(document).on("click", "input#del", function() {
 			dataType: "text",             // 預期會接收到回傳資料的格式： json | xml | html
 			beforeSend: function() {       // 在 request 發送之前執行
 			},
-			success: function (data) {
-                if (data == 'deleted successfully') {
-                    alert(data);
+			success: function(data) {
+				if (data == 'deleted successfully') {
+					alert(data);
 
-                    $(that).closest('tr').animate({
-                        "opacity": 0
-                    }, 1000, "swing", function () {
-                        $(this).remove();
-                    });
-                } else {
-                    alert(data);
-                }
-            },
+					$(that).closest('tr').animate({
+						"opacity": 0
+					}, 1000, "swing", function() {
+						$(this).remove();
+					});
+				} else {
+					alert(data);
+				}
+			},
 			error: function(xhr) {         // request 發生錯誤的話執行
 				alert('連線異常！')
 			},
@@ -138,7 +138,7 @@ $("button#task_update").on("click", function() {
 			statusCode: {                 // 狀態碼
 			},
 			success: function(item) {//第一層子元素為li標籤
-				if(item == "更新成功") {
+				if (item == "更新成功") {
 					alert(item);
 					window.location.href = '/period/';
 				} else {
@@ -148,8 +148,8 @@ $("button#task_update").on("click", function() {
 			},
 			error: function(xhr) {         // request 發生錯誤的話執行
 				if (xhr.status === 400) {
-					var errorMessage = xhr.responseText;
-					let replacement = `<p id="replaceMe">${errorMessage}</p>`;
+					var error = JSON.parse(xhr.responseText);
+					let replacement = `<p id="replaceMe">${error.message}</p>`;
 					$("#verify_here").html(replacement);
 				} else {
 					alert('連線異常');

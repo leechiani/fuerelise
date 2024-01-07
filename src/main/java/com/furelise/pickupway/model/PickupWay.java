@@ -28,10 +28,6 @@ public class PickupWay implements Serializable{
 
     @Column(name = "wayName")
     private String wayName;
-    
-//    @OneToMany(mappedBy = "pickupWay", cascade = CascadeType.ALL)
-//    @OrderBy("wayID")
-//    private Set<PlanOrd> planOrds;
 
     public PickupWay() {
         super();

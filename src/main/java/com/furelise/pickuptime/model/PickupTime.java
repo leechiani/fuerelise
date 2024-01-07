@@ -32,13 +32,6 @@ public class PickupTime implements Serializable{
     @Column(name = "timeRange")
     private String timeRange;
     
-//    @OneToMany(mappedBy = "pickupTime", cascade = CascadeType.ALL)
-//    @OrderBy("timeID")
-//    private Set<PlanOrd> planOrds;
-//    
-//    @OneToMany(mappedBy = "pickupTime", cascade = CascadeType.ALL)
-//    private Set<Emp> emps;
-    
     public PickupTime() {
     	
     }

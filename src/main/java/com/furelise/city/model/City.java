@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import org.checkerframework.common.aliasing.qual.Unique;
+
 //import com.furelise.emp.model.Emp;
 //import com.furelise.planord.model.PlanOrd;
 
@@ -31,6 +33,7 @@ public class City implements Serializable {
 	private Integer cityID;
 
 	@Pattern(regexp = "^\\d{3}$", message = "請填三位數字")
+	@Unique
 	@NotBlank(message = "請勿空白")
 	@Column(name = "cityCode", columnDefinition = "char")
 	private String cityCode;
@@ -41,11 +44,6 @@ public class City implements Serializable {
 
 	public City() {
 		super();
-	}
-
-	public City(String cityCode, String cityName) {
-		this.cityCode = cityCode;
-		this.cityName = cityName;
 	}
 
 }

@@ -19,6 +19,7 @@ public class PlanOrdDTO {
 	private String[] weekDay;
 	private Integer wayID;
 	private Date planStart;
+	private Date planEnd;
 	private String contact;
 	@Pattern(regexp="^\\d{10}$", message="手機號碼格式錯誤")
 	private String contactTel;
@@ -33,7 +34,7 @@ public class PlanOrdDTO {
 	private String memName;
 //	private String planName;
 //	private Date planStart;
-	private Date planEnd;
+//	private Date planEnd;
 	private BigDecimal total;
 	private String planStatus;
 	
